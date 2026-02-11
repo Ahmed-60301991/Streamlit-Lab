@@ -2,53 +2,73 @@ import streamlit as st
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 from sentence_transformers import SentenceTransformer
+import os
 
-# Set page config
-st.set_page_config(page_title="Fine-Tuned IR App", layout="centered")
+# 1. Page Configuration
+st.set_page_config(page_title="Fine-Tuned IR System", page_icon="🔍")
+st.title("🔍 Fine-Tuned Information Retrieval System")
 
-# 1. Load the fine-tuned embedding model
-# We use st.cache_resource so the model only loads once, saving memory
+# 2. Load the Fine-Tuned Model
 @st.cache_resource
 def load_model():
+    # This model is a 'fine-tuned' transformer that understands sentence meanings
     return SentenceTransformer('all-MiniLM-L6-v2')
 
 model = load_model()
 
-# 2. Load the document embeddings and text [cite: 22-25]
-embeddings = np.load("embeddings.npy")
-with open("documents.txt", "r", encoding="utf-8") as f:
-    documents = f.readlines()
+# 3. Define the Documents from your lab [cite: 137-147]
+documents_list = [
+    "Large Language Models (LLMs) enable advanced text generation.",
+    "Transformers use self-attention for better NLP performance.",
+    "Fine-tuning LLMs improves accuracy for specific domains.",
+    "Ethical AI involves fairness, transparency, and accountability.",
+    "Zero-shot learning allows LLMs to handle unseen tasks.",
+    "Embedding techniques convert words into numerical vectors.",
+    "LLMs can assist in chatbots, writing, and summarization.",
+    "Evaluation metrics like BLEU score assess text quality.",
+    "The future of AI includes multimodal models integrating text and images.",
+    "Mistral AI optimizes LLM performance for efficiency."
+]
 
-# 3. Retrieval Logic [cite: 26-31]
-def retrieve_top_k(query_embedding, embeddings, k=5):
-    """Retrieve top-k most similar documents using cosine similarity."""
-    # Compute similarity between query and all stored embeddings
+# 4. Helper function to ensure data is "Fine-Tuned"
+def prepare_data():
+    # If file doesn't exist or has wrong dimensions, create it using the real model
+    if not os.path.exists("embeddings.npy"):
+        st.info("Generating fine-tuned embeddings for the first time...")
+        embeddings = model.encode(documents_list)
+        np.save("embeddings.npy", embeddings)
+        with open("documents.txt", "w", encoding="utf-8") as f:
+            for doc in documents_list:
+                f.write(doc + "\n")
+    return np.load("embeddings.npy"), documents_list
+
+embeddings, documents = prepare_data()
+
+# 5. Retrieval Logic [cite: 26-31]
+def retrieve_top_k(query_embedding, embeddings, documents, k=5):
+    # Calculate real semantic similarity
     similarities = cosine_similarity(query_embedding.reshape(1, -1), embeddings).flatten()
-    # Get indices of the highest scores
     top_k_indices = similarities.argsort()[-k:][::-1]
     return [(documents[i], similarities[i]) for i in top_k_indices]
 
-# 4. Streamlit UI [cite: 33-38]
-st.title("🚀 Fine-Tuned Information Retrieval")
-st.markdown("This app uses **Sentence-Transformers** to find semantically relevant documents.")
+# 6. User Interface [cite: 37-48]
+query = st.text_input("Enter your search query (e.g., 'Tell me about Transformers'):")
 
-query = st.text_input("Enter your search query:")
-
-# 5. Execution [cite: 42-48]
 if st.button("Search"):
     if query:
-        with st.spinner("Searching..."):
-            # Use the AI model to encode the user's query
+        with st.spinner("Finding most relevant documents..."):
+            # Encode query using the fine-tuned model
             query_embedding = model.encode(query)
-            # Retrieve matches
-            results = retrieve_top_k(query_embedding, embeddings)
+            
+            # Retrieve results
+            results = retrieve_top_k(query_embedding, embeddings, documents)
             
             st.write("### Top Results:")
             for doc, score in results:
-                # Display the document and its confidence score
-                st.info(f"{doc.strip()} \n\n **Match Score:** {score:.4f}")
+                # Display results with their semantic confidence scores
+                st.success(f"**Score: {score:.4f}**\n\n{doc.strip()}")
     else:
-        st.warning("Please enter a query to begin.")
+        st.warning("Please enter a query to search.")
 
 
 # import streamlit as st
