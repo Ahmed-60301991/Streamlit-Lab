@@ -1,5 +1,5 @@
-Streamlit is a powerful framework for web apps.
-Information Retrieval uses document embeddings.
-Python is great for data science and machine learning.
-Cosine similarity measures how similar two vectors are.
-GitHub is used for version control and hosting code.
+Streamlit is an open-source Python library that makes it easy to create custom web apps.
+Information retrieval is the process of obtaining information system resources that are relevant to an information need.
+Document embeddings convert text into numerical vectors that capture semantic meaning.
+Cosine similarity is a metric used to measure how similar two vectors are.
+Machine learning models require high-quality data to perform accurate predictions.
