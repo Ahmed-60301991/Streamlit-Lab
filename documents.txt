@@ -1,0 +1,5 @@
+Streamlit is a powerful framework for web apps.
+Information Retrieval uses document embeddings.
+Python is great for data science and machine learning.
+Cosine similarity measures how similar two vectors are.
+GitHub is used for version control and hosting code.
