@@ -1,5 +1,10 @@
-Streamlit is an open-source Python library that makes it easy to create custom web apps.
-Information retrieval is the process of obtaining information system resources that are relevant to an information need.
-Document embeddings convert text into numerical vectors that capture semantic meaning.
-Cosine similarity is a metric used to measure how similar two vectors are.
-Machine learning models require high-quality data to perform accurate predictions.
+Large Language Models (LLMs) enable advanced text generation.
+Transformers use self-attention for better NLP performance.
+Fine-tuning LLMs improves accuracy for specific domains.
+Ethical AI involves fairness, transparency, and accountability.
+Zero-shot learning allows LLMs to handle unseen tasks.
+Embedding techniques convert words into numerical vectors.
+LLMs can assist in chatbots, writing, and summarization.
+Evaluation metrics like BLEU score assess text quality.
+The future of AI includes multimodal models integrating text and images.
+Mistral AI optimizes LLM performance for efficiency.
